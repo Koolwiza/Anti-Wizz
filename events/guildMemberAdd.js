@@ -6,7 +6,7 @@ const {
 
 let userCacheInvite = {}
 
-module.exports = async (member, client) => {
+module.exports = async (client, member) => {
 
     let {
         invites
@@ -55,10 +55,11 @@ module.exports = async (member, client) => {
     })
 
     let coll = new Discord.Collection(await Promise.all(fromEntries))
-    coll.filter(c => c.joinedTimestamp > (Date.now() - threshold))
-    if (coll >= amount) {
+    coll = coll.filter(c => c.joinedTimestamp > (Date.now() - threshold))
+
+    if (coll.size >= amount) {
         coll.forEach(C => {
-            if (C.bannable) c.ban({
+            if (C.bannable) C.kick({
                 reason: "Token raiding",
                 days: 7
             }).catch(e => {
