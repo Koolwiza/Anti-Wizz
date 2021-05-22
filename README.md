@@ -8,3 +8,7 @@ A bot made to protect your server against raiders
 - Anti Everyone (Bans author when x amount of pings are sent in x seconds)
 - Anti Token Raiding (Bans all raiders when x amount of users join in x seconds by the same invite)
 - Anti Bot (Kicks bot and kicks bot adder if a bot is added)
+- Anti Banning (Bans person who banned people and unbans the banned people if there are x people banned in x seconds)
+- Anti Kicking (Bans person who kicked people if there are x people kicked in x seconds)
+- Anti Channel Create/Delete (Bans person who deleted or created x channels in x seconds)
+- Anti Role Create/Delete (Bans person who deleted or created x roles in x seconds)
