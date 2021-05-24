@@ -12,3 +12,6 @@ A bot made to protect your server against raiders
 - Anti Kicking (Bans person who kicked people if there are x people kicked in x seconds)
 - Anti Channel Create/Delete (Bans person who deleted or created x channels in x seconds)
 - Anti Role Create/Delete (Bans person who deleted or created x roles in x seconds)
+- Logs Channel (The logs for the raids)
+- Lockdown (Sets the server to highest security removing permissions from all roles (can be reversed ))
+- Whitelist (People will not be affected by anti raid)
