@@ -1,22 +1,10 @@
 const { readdirSync } = require('fs');
 
-const Discord = require('discord.js'),
-    client = new Discord.Client(),
+const Client = require('./Client'),
+    client = new Client(),
     {
-        threshold,
-        token,
-        amount
-    } = require('./config.json'),
-    {
-        promisify
-    } = require('util'),
-    Enmap = require('enmap')
-
-client.wait = promisify(setTimeout)
-client.invites = {}
-client.commands = new Discord.Collection()
-client.db = {}
-
+        token
+    } = require('./config.json')
 
 let evtFiles = readdirSync('./events').filter(c => c.endsWith('.js'))
 
