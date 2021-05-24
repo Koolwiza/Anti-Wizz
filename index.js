@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs');
 
-const Client = require('./Client'),
+const Client = require('./struct/Client'),
     client = new Client(),
     {
         token

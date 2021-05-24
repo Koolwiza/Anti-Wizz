@@ -6,7 +6,7 @@ const {
 } = require('discord.js'),
     util = require('util'),
     Enmap = require('enmap'),
-    config = require('./config.json')
+    config = require('../config.json')
 
 module.exports = class extends Client {
     constructor(options) {

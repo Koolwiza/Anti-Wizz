@@ -1,5 +1,5 @@
 const Discord = require('discord.js'),
-    Client = require('../Client')
+    Client = require('../struct/Client')
 
 module.exports = {
     name: "whitelist",
