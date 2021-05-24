@@ -6,7 +6,8 @@ const {
 } = require('discord.js'),
     util = require('util'),
     Enmap = require('enmap'),
-    config = require('../config.json')
+    config = require('../config.json'),
+    AntiToxic = require('./AntiToxic')
 
 module.exports = class extends Client {
     constructor(options) {
@@ -17,6 +18,7 @@ module.exports = class extends Client {
         this.roleCreateDelete = []
         this.channelCreateDelete = []
         this.commands = new Collection()
+        this.toxic = new AntiToxic(config.perspective)
         this.db = {
             locks: new Enmap({
                 name: "locks",
@@ -49,10 +51,10 @@ module.exports = class extends Client {
     /**
      * 
      * @param {string} search 
-     * @returns {User}
+     * @returns {Promise<User>}
      */
 
-    resolveUser(search) {
+    async resolveUser(search) {
         let user = null;
 		if(!search || typeof search !== "string") return;
 		if(search.match(/^<@!?(\d+)>$/)){
