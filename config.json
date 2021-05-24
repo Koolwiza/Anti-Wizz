@@ -1,6 +1,7 @@
 {
-    "prefix":"",
-    "token":"ODIxMDUzODQ0MjcxNjYxMDc2.YE-H-g.quC9I5DLCSuMW01eYe2nkgco_lU",
+    "prefix":"a!",
+    "token":"ODIxMDUzODQ0MjcxNjYxMDc2.YE-H-g.DPHwo3-MfsmOuVWYMl2d1y-APKs",
     "threshold":10000,
-    "amount":5
+    "amount":2,
+    "embedColor":"BLUE"
 }
