@@ -14,7 +14,7 @@ module.exports = async (client, role) => {
 
     let audit = await role.guild.fetchAuditLogs({
         limit: 1,
-        type: 30
+        type: 32
     })
 
     let entry = audit.entries.first()
@@ -31,7 +31,8 @@ module.exports = async (client, role) => {
     })
 
     let channel = client.db.guild.get(`logs_${role.guild.id}`)
-    if (channel) await client.sendLog(channel, "Role Created", `${person.username} has created a role`)
+    if(channel) await client.sendLog(channel, "Role Deleted", `${person.username} has deleted a role`)
+
 
     let filtered = client.roleCreateDelete.filter(c => c.timestamp > (Date.now() - threshold) && c.guild === role.guild.id)
 
@@ -39,6 +40,6 @@ module.exports = async (client, role) => {
         let member = await role.guild.members.fetch(person.id)
         if (member.banable) role.guild.members.ban(person.id).catch(e => {})
 
-        if (channel) await client.sendLog(channel, "Member Banned", `${person.username} has been banned for creating too many roles`)
+        if(channel) await client.sendLog(channel, "Member Banned", `${person.username} has been banned for deleting too many roles`)
     }
 }

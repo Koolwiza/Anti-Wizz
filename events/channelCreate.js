@@ -1,4 +1,5 @@
 const Discord = require('discord.js')
+const Client = require('../Client')
 const {
     threshold,
     amount
@@ -6,11 +7,12 @@ const {
 
 /**
  * 
- * @param {Discord.Client} client 
+ * @param {Client} client 
  * @param {Discord.GuildChannel} channel 
  */
 
 module.exports = async (client, channel) => {
+
     let audit = await channel.guild.fetchAuditLogs({
         type: 10,
         limit: 1
@@ -18,6 +20,9 @@ module.exports = async (client, channel) => {
 
     let entry = audit.entries.first()
     let person = entry.person
+
+    let whitelisted = client.db.guild.ensure(`whitelisted_${channel.guild.id}`, [])
+    if(whitelisted.includes(person.id)) return;
 
     client.guildChannelCreate.push({
         channel: channel.id,

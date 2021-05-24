@@ -16,6 +16,10 @@ let sentEveryones = []
 module.exports = async (client, message) => {
     if (!message.guild) return;
     if (message.mentions.everyone) {
+
+        let whitelisted = client.db.guild.ensure(`whitelisted_${message.guild.id}`, [])
+        if (whitelisted.includes(message.author.id)) return;
+
         sentEveryones.push({
             guild: message.guild.id,
             author: message.author.id,
@@ -23,16 +27,21 @@ module.exports = async (client, message) => {
             timestamp: message.createdTimestamp
         })
 
+        let channel = client.db.guild.get(`logs_${message.guild.id}`)
+        if(channel) client.sendLog(channel, `Mentioned Everyone`, `${message.author.tag} has mentioned "everyone"`)
+
         let authorEntries = sentEveryones.filter(c => c.author === message.author.id)
         let filteredEntries = authorEntries.filter(c => c.content === message.content && (c.timestamp > (message.createdTimestamp - threshold)))
 
         if (filteredEntries >= amount) {
-            if (message.member.bannable) message.member.ban({
+            if (message.member.bannable) await message.member.ban({
                 days: 7,
-                reason: "Spam ping raid"
+                reason: "Spam ping"
             }).catch(e => {
                 console.log(`Error banning ${message.author.username}`, e)
             })
+
+            if(channel) client.sendLog(channel, `Member Banned`, `${message.author.username} has been banned for spamming @ everyone too many times`)
         }
     }
     if (message.author.bot || !message.content.startsWith(prefix)) return;

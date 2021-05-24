@@ -19,6 +19,9 @@ module.exports = async (client, channel) => {
     let entry = audit.entries.first()
     let person = entry.person
 
+    let whitelisted = client.db.guild.ensure(`whitelisted_${channel.guild.id}`, [])
+    if(whitelisted.includes(person.id)) return;
+
     client.guildChannelCreate.push({
         channel: channel.id,
         author: person,

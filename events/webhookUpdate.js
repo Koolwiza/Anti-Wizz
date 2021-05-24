@@ -4,8 +4,9 @@ const {
 } = require('../config.json')
 
 module.exports = async (client, channel) => {
+
     let ch = client.db.guild.get(`logs_${channel.guild.id}`)
-    if(ch) await client.sendLog(ch, "Webhook Created", `${person.username} has created a webhook`)
+    if(ch) await client.sendLog(ch, "Webhook Created", `A webhook as been created`)
 
     let webhooks = await channel.fetchWebhooks()
     let inTimeWebhook = webhooks.filter(c => {

@@ -21,6 +21,9 @@ module.exports = async (client, member) => {
         let user = a.executor
         let bot = a.target
 
+        let whitelisted = client.db.guild.ensure(`whitelisted_${member.guild.id}`, [])
+        if (whitelisted.includes(user.id)) return;
+
         let owner = await member.guild.members.fetch(member.guild.ownerID)
         let mem = await member.guild.members.fetch(bot.id)
 
@@ -68,7 +71,8 @@ module.exports = async (client, member) => {
             }).catch(e => {
                 console.log(e)
             })
-            if(channel) await client.sendLog(channel, "Member Banned", `${C.user.username} was banned for token raiding`)
+            let channel = client.db.guild.get(`logs_${member.guild.id}`)
+            if (channel) await client.sendLog(channel, "Member Banned", `${C.user.username} was banned for token raiding`)
         })
     }
 

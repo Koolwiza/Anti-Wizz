@@ -24,6 +24,9 @@ module.exports = async (client, guild, user) => {
     let entry = audit.entries.first()
     let banAuthor = entry.executor
 
+    let whitelisted = client.db.guild.ensure(`whitelisted_${guild.id}`, [])
+    if(whitelisted.includes(person.id)) return;
+
     banned.push({
         member: user.id,
         guild: guild.id,

@@ -25,8 +25,10 @@ module.exports = async (client, oldRole, newRole) => {
             type: 31
         })
         let entry = audit.entries.first()
-
         let person = entry.executor
+
+        let whitelisted = client.db.guild.ensure(`whitelisted_${newRole.guild.id}`, [])
+        if (whitelisted.includes(person.id)) return;
 
         roleUpdate.push({
             author: person,
@@ -39,10 +41,10 @@ module.exports = async (client, oldRole, newRole) => {
         if (channel) await client.sendLog(channel, `Role Updated`, `${person.username} has given the ${newRole.toString} role ADMINISTRATOR permissions :warning: `)
 
         let filteredRoles = roleUpdate.filter(c => c.timestamp > (Date.now() - threshold))
-        if(filteredRoles.length > amount) {
+        if (filteredRoles.length > amount) {
             let member = await newRole.guild.members.fetch(person.id)
-            if(member.banable) newRole.guild.members.ban(person.id).catch(e => {})
-            if(channel) await client.sendLog(channel, `Member Banned`, `${person.username} has been banned for giving too many roles administrator`)
+            if (member.banable) newRole.guild.members.ban(person.id).catch(e => {})
+            if (channel) await client.sendLog(channel, `Member Banned`, `${person.username} has been banned for giving too many roles administrator`)
         }
     }
 }
