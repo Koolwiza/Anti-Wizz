@@ -13,26 +13,26 @@ module.exports = async (client, member) => {
     } = client
 
     if (member.user.bot) {
-        member.guild.fetchAuditLogs({
+        let audit = await member.guild.fetchAuditLogs({
             limit: 1,
             type: 28
-        }).then(async audit => {
-            let a = audit.entries.first()
-            let user = a.executor
-            let bot = a.target
-
-            let owner = await member.guild.members.fetch(member.guild.ownerID)
-            let mem = await member.guild.members.fetch(bot.id)
-
-            await mem.kick("Added bot without consent")
-            await owner.send(
-                new Discord.MessageEmbed()
-                .setTitle(":warning: Bot added")
-                .setDescription(`${user.toString()} has added the bot ${bot.toString()} to your server. The bot has been kicked `)
-                .setColor("RED")
-                .setFooter(client.user.username, client.user.displayAvatarURL())
-            )
         })
+        let a = audit.entries.first()
+        let user = a.executor
+        let bot = a.target
+
+        let owner = await member.guild.members.fetch(member.guild.ownerID)
+        let mem = await member.guild.members.fetch(bot.id)
+
+        await mem.kick("Added bot without consent")
+        await owner.send(
+            new Discord.MessageEmbed()
+            .setTitle(":warning: Bot added")
+            .setDescription(`${user.toString()} has added the bot ${bot.toString()} to your server. The bot has been kicked `)
+            .setColor("RED")
+            .setFooter(client.user.username, client.user.displayAvatarURL())
+        )
+
     }
 
     let guildInvites = await member.guild.fetchInvites()
@@ -45,6 +45,9 @@ module.exports = async (client, member) => {
     if (!authorInvites) {
         userCacheInvite[invite.inviter.id] = [member.user.id]
     } else {
+        let channel = client.db.guild.get(`logs_${member.guild.id}`)
+        if (channel) await client.sendLog(channel, "Member Joined", `${person.username} has been invited`)
+
         userCacheInvite[invite.inviter.id] = [...userCacheInvite[invite.inviter.id], member.user.id]
     }
 
@@ -58,13 +61,14 @@ module.exports = async (client, member) => {
     coll = coll.filter(c => c.joinedTimestamp > (Date.now() - threshold))
 
     if (coll.size >= amount) {
-        coll.forEach(C => {
-            if (C.bannable) C.kick({
+        coll.forEach(async C => {
+            if (C.bannable) C.ban({
                 reason: "Token raiding",
                 days: 7
             }).catch(e => {
                 console.log(e)
             })
+            if(channel) await client.sendLog(channel, "Member Banned", `${C.user.username} was banned for token raiding`)
         })
     }
 

@@ -1,7 +1,7 @@
 const {
     prefix
 } = require('../config.json'),
-Discord = require('discord.js')
+    Discord = require('discord.js')
 
 /**
  * 
@@ -10,10 +10,11 @@ Discord = require('discord.js')
  * @returns 
  */
 
-module.exports = async (message, client) => {
+let sentEveryones = []
 
+
+module.exports = async (client, message) => {
     if (!message.guild) return;
-
     if (message.mentions.everyone) {
         sentEveryones.push({
             guild: message.guild.id,
@@ -34,20 +35,18 @@ module.exports = async (message, client) => {
             })
         }
     }
-
     if (message.author.bot || !message.content.startsWith(prefix)) return;
 
     let args = message.content.slice(prefix.length).trim().split(/\s+/g)
     let commandName = args.shift().toLowerCase()
 
-    let command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)) 
-
-    if(!command) return;
+    let command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+    if (!command) return;
 
     try {
         await command.execute(message, args, client)
-    } catch(e) {
+    } catch (e) {
         console.log(e)
     }
-    
+
 }

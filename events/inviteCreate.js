@@ -1,4 +1,4 @@
-module.exports = (invite, guild, client) => {
+module.exports = (client, invite, guild) => {
 
     let {
         invites

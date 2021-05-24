@@ -1,4 +1,4 @@
-module.exports = async (guild, client) => {
+module.exports = async (client, guild) => {
     let {
         invites
     } = client
