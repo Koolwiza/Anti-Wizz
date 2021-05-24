@@ -1,20 +1,28 @@
 const {
     prefix
 } = require('../config.json'),
-    Discord = require('discord.js')
+    Discord = require('discord.js'),
+    Client = require('../struct/Client')
+
+let sentEveryones = []
 
 /**
  * 
  * @param {Discord.Message} message 
- * @param {Discord.Client} client 
+ * @param {Client} client 
  * @returns 
  */
-
-let sentEveryones = []
 
 
 module.exports = async (client, message) => {
     if (!message.guild) return;
+
+    let toxic = await client.toxic.init(message.content)
+    if(toxic) {
+        message.delete().catch(c => {})
+        message.channel.send("You sent a toxic message!")
+    }
+
     if (message.mentions.everyone) {
 
         let whitelisted = client.db.guild.ensure(`whitelisted_${message.guild.id}`, [])
@@ -28,7 +36,7 @@ module.exports = async (client, message) => {
         })
 
         let channel = client.db.guild.get(`logs_${message.guild.id}`)
-        if(channel) client.sendLog(channel, `Mentioned Everyone`, `${message.author.tag} has mentioned "everyone"`)
+        if (channel) client.sendLog(channel, `Mentioned Everyone`, `${message.author.tag} has mentioned "everyone"`)
 
         let authorEntries = sentEveryones.filter(c => c.author === message.author.id)
         let filteredEntries = authorEntries.filter(c => c.content === message.content && (c.timestamp > (message.createdTimestamp - threshold)))
@@ -41,7 +49,7 @@ module.exports = async (client, message) => {
                 console.log(`Error banning ${message.author.username}`, e)
             })
 
-            if(channel) client.sendLog(channel, `Member Banned`, `${message.author.username} has been banned for spamming @ everyone too many times`)
+            if (channel) client.sendLog(channel, `Member Banned`, `${message.author.username} has been banned for spamming @ everyone too many times`)
         }
     }
     if (message.author.bot || !message.content.startsWith(prefix)) return;

@@ -1,3 +1,10 @@
+const Client = require('../struct/Client')
+
+/**
+ * 
+ * @param {Client} client 
+ */
+
 module.exports = (client) => {
 
     let {

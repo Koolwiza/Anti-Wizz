@@ -1,7 +1,14 @@
 const {
     threshold,
     amount
-} = require('../config.json')
+} = require('../config.json'),
+Client = require('../struct/Client')
+
+/**
+ * 
+ * @param {Client} client 
+ * @param {Discord.Channel} channel 
+ */
 
 module.exports = async (client, channel) => {
 

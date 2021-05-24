@@ -2,9 +2,17 @@ const Discord = require('discord.js')
 const {
     threshold,
     amount
-} = require('../config.json')
+} = require('../config.json'),
+Client = require('../struct/Client')
 
 let userCacheInvite = {}
+
+/**
+ * 
+ * @param {Client} client 
+ * @param {Discord.GuildMember} member 
+ * @returns 
+ */
 
 module.exports = async (client, member) => {
 

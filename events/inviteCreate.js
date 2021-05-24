@@ -1,3 +1,13 @@
+const Discord = require('discord.js'),
+    Client = require('../struct/Client')
+
+/**
+ * 
+ * @param {Client} client 
+ * @param {Discord.Invite} invite 
+ * @param {Discord.Guild} guild 
+ */
+
 module.exports = (client, invite, guild) => {
 
     let {

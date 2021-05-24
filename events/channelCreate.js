@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const Client = require('../Client')
+const Client = require('../struct/Client')
 const {
     threshold,
     amount

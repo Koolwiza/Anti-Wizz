@@ -2,13 +2,14 @@ const Discord = require('discord.js')
 const {
     threshold,
     amount
-} = require('../config.json')
+} = require('../config.json'),
+Client = require('../struct/Client')
 
 let banned = []
 
 /**
  * 
- * @param {Discord.Client} client 
+ * @param {Client} client 
  * @param {Discord.Guild} guild 
  * @param {Discord.User} user 
  */
