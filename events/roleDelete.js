@@ -21,7 +21,7 @@ module.exports = async (client, role) => {
     let entry = audit.entries.first()
     let person = entry.executor
 
-    let whitelisted = client.db.guild.ensure(`whitelisted_${role.guild.id}`, [])
+    let whitelisted = client.db.guild.ensure(`whitelisted_${role.guild.id}`, [client.user.id])
     if(whitelisted.includes(person.id)) return;
 
     client.roleCreateDelete.push({
@@ -39,7 +39,7 @@ module.exports = async (client, role) => {
 
     if (filtered.length > amount) {
         let member = await role.guild.members.fetch(person.id)
-        if (member.banable) role.guild.members.ban(person.id).catch(e => {})
+        role.guild.members.ban(person.id).catch(e => {})
 
         if(channel) await client.sendLog(channel, "Member Banned", `${person.username} has been banned for deleting too many roles`)
     }
