@@ -44,7 +44,6 @@ module.exports = {
             client.db.locks.set('lockdown', false)
             message.guild.members.cache.forEach(member => {
                 let roles = client.db.locks.get(`role_data_${message.guild.id}`)[member.user.id]
-                console.log(member.user.username, roles)
                 member.roles.set(roles)
             })
 
