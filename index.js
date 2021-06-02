@@ -22,3 +22,5 @@ for (let file of cmdFiles) {
 }
 
 client.login(token)
+
+module.exports.client = client
