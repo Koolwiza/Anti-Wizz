@@ -1,7 +1,14 @@
 {
     "prefix":"a!",
-    "token":"ODIxMDUzODQ0MjcxNjYxMDc2.YE-H-g.DPHwo3-MfsmOuVWYMl2d1y-APKs",
+    "token":"ODIxMDUzODQ0MjcxNjYxMDc2.YE-H-g.I6IHUp8COgncW84o99uITxGgByg",
+    "perspective":"AIzaSyCbtj-nkM0sTjWXSyyPGoegCBtUQtAikwE",
     "threshold":10000,
     "amount":2,
-    "embedColor":"BLUE"
+    "embedColor":"BLUE",
+    "settings": { 
+        "age": 30, 
+        "punishment":"kick",
+        "whitelisted":[],
+        "log":""
+    }
 }
