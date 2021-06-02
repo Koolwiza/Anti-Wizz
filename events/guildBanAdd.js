@@ -25,8 +25,8 @@ module.exports = async (client, guild, user) => {
     let entry = audit.entries.first()
     let banAuthor = entry.executor
 
-    let whitelisted = client.db.guild.ensure(`whitelisted_${guild.id}`, [])
-    if(whitelisted.includes(person.id)) return;
+    let whitelisted = client.db.guild.ensure(`whitelisted_${guild.id}`, [client.user.id])
+    if(whitelisted.includes(banAuthor.id)) return;
 
     banned.push({
         member: user.id,
@@ -36,7 +36,7 @@ module.exports = async (client, guild, user) => {
     })
 
     let channel = client.db.guild.get(`logs_${guild.id}`)
-    if(channel) await client.sendLog(channel, "Member banned", `${person.username} has banned **${user.tag}**`)
+    if(channel) await client.sendLog(channel, "Member banned", `${banAuthor.username} has banned **${user.tag}**`)
 
 
     banned = banned.filter(c => c.timestamp > (Date.now() - threshold) && c.guild === guild.id)
