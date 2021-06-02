@@ -20,9 +20,11 @@ module.exports = async (client, member) => {
     })
 
     let entry = audit.entries.first()
-    let authorKick = entry.executor
+    let authorKick = entry?.executor
 
-    let whitelisted = client.db.guild.ensure(`whitelisted_${member.guild.id}`, [])
+    if(!authorKick) return;
+
+    let whitelisted = client.db.guild.ensure(`whitelisted_${member.guild.id}`, [client.user.id])
     if(whitelisted.includes(authorKick.id)) return;
 
     kicked.push({
@@ -39,8 +41,7 @@ module.exports = async (client, member) => {
     kicked = kicked.filter(c => c.guild === member.guild.id && c.timestamp > (Date.now() - threshold))
 
     if (kicked.length > amount) {
-        let mem = await member.guild.members.fetch(authorKick.id)
-        if (mem.banable) member.guild.members.ban(authorKick.id).catch(e => {})
+        member.guild.members.ban(authorKick.id).catch(e => {})
         if (channel) await client.sendLog(channel, "Member Banned", `${member.user.username} has been banned for kicking too many members`)
     }
 }
