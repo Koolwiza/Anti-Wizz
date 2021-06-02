@@ -5,7 +5,7 @@ const Discord = require('discord.js'),
     } = require('lodash')
 
 module.exports = {
-    name: "balcklist",
+    name: "blacklist",
     description: `Blacklist a whitelisted user (remove whitelist)`,
 
     /**
@@ -17,6 +17,8 @@ module.exports = {
 
     execute: async function (message, args, client) {
         let user = await client.resolveUser(args[0])
+        if(!user) return message.channel.send(`Please provide a user`)
+
         let whitelisted = client.db.guild.get(`whitelisted_${message.guild.id}`)
         let newArr = pullAt(whitelisted, whitelisted.indexOf(user.id))
         client.db.guild.set(`whitelisted_${message.guild.id}`, newArr)
