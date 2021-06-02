@@ -2,7 +2,7 @@ const {
     threshold,
     amount
 } = require('../config.json'),
-Client = require('../struct/Client')
+    Client = require('../struct/Client')
 
 /**
  * 
@@ -13,7 +13,7 @@ Client = require('../struct/Client')
 module.exports = async (client, channel) => {
 
     let ch = client.db.guild.get(`logs_${channel.guild.id}`)
-    if(ch) await client.sendLog(ch, "Webhook Created", `A webhook as been created`)
+    if (ch) await client.sendLog(ch, "Webhook Created", `A webhook as been created`)
 
     let webhooks = await channel.fetchWebhooks()
     let inTimeWebhook = webhooks.filter(c => {
@@ -28,15 +28,15 @@ module.exports = async (client, channel) => {
         }))
         owners.forEach(async c => {
             let member = await channel.guild.members.fetch(c)
-            if(ch) await client.sendLog(ch, `Member Banned`, `${member.user.username} has been banned for creating too many webhooks`) 
-            if (member.bannable) {
-                member.ban({
-                    days: 7,
-                    reason: "Webhook spamming"
-                }).catch(e => {
-                    console.log(`Had an error banning ${member.user.username}\n${e}`)
-                })
-            }
+            if (ch) await client.sendLog(ch, `Member Banned`, `${member.user.username} has been banned for creating too many webhooks`)
+
+            member.ban({
+                days: 7,
+                reason: "Webhook spamming"
+            }).catch(e => {
+                console.log(`Had an error banning ${member.user.username}\n${e}`)
+            })
+
         })
     }
 }
