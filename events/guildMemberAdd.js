@@ -3,7 +3,8 @@ const {
     threshold,
     amount
 } = require('../config.json'),
-Client = require('../struct/Client')
+Client = require('../struct/Client'),
+humanize = require('humanize-duration')
 
 let userCacheInvite = {}
 
@@ -29,7 +30,7 @@ module.exports = async (client, member) => {
         let user = a.executor
         let bot = a.target
 
-        let whitelisted = client.db.guild.ensure(`whitelisted_${member.guild.id}`, [])
+        let whitelisted = client.db.guild.ensure(`whitelisted_${member.guild.id}`, [client.user.id])
         if (whitelisted.includes(user.id)) return;
 
         let owner = await member.guild.members.fetch(member.guild.ownerID)
@@ -83,5 +84,67 @@ module.exports = async (client, member) => {
             if (channel) await client.sendLog(channel, "Member Banned", `${C.user.username} was banned for token raiding`)
         })
     }
+
+
+    let data = client.db.antiAlt.ensure(member.guild.id, {
+        ...client.config.settings
+    })
+
+    let dataAge = data.age * 24 * 60 * 60 * 1000
+
+    let minAge = Date.now() + dataAge
+    let userCreate = member.user.createdTimestamp
+
+    if (userCreate < minAge) {
+        let userTime = humanize(Date.now() - userCreate, {
+            conjunction: " and ",
+            serialComma: false
+        })
+
+        let ageTime = humanize(dataAge, {
+            conjunction: " and ",
+            serialComma: false
+        })
+
+        let neededTime = humanize(minAge - userCreate, {
+            conjunction: " and ",
+            serialComma: false
+        })
+
+        await member.user.send(new Discord.MessageEmbed()
+            .setTitle("You were detected")
+            .setDescription(`You were **${data.punishment === "kick" ? "kicked" : "banned"}** from ${member.guild.name}.\nMinimum Account Age: ${ageTime}\nYour Account Age: ${userTime}. \n\n*PS. Your account needs to be ${neededTime} older!*`)
+            .setColor("RED")
+            .setAuthor(member.user.tag, member.user.displayAvatarURL())
+            .setFooter(client.user.username)
+            )
+
+        if (data.punishment.toLowerCase() === "kick") {
+            await member.kick('Did not meet account age requirement: ' + ageTime).catch(async e => {
+                let ch = member.guild.channels.cache.get(data.logs)
+                await ch.send(
+                    new Discord.MessageEmbed()
+                    .setTitle("Error!")
+                    .setDescription(`:warning: I had an error kicking ${member ?? member.user.tag}`)
+                    .setColor("RED")
+                    .setAuthor(member.user.tag, member.user.displayAvatarURL())
+                    .setFooter(client.user.username)                )
+            })
+        } else if (data.punishment.toLowerCase() === "ban") {
+            member.guild.members.ban(member, {
+                reason: "Did not meet account age requirement: " + ageTime
+            }).catch(async e => {
+                let ch = member.guild.channels.cache.get(data.logs)
+                await ch.send(
+                    new Discord.MessageEmbed()
+                    .setTitle("Error!")
+                    .setDescription(`:warning: I had an error banning ${member ?? member.user.tag}`)
+                    .setColor("RED")
+                    .setAuthor(member.user.tag, member.user.displayAvatarURL())
+                    .setFooter(client.user.username)                )
+            })
+        }
+    }
+    
 
 }
