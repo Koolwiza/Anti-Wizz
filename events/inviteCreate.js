@@ -16,5 +16,5 @@ module.exports = (client, invite, guild) => {
 
     let guildInvites = invites[invite.guild.id]
     guildInvites.set(invite.code, invite)
-    client.codeinvites[invite.guild.id] = guildInvites
+    client.invites[invite.guild.id] = guildInvites
 }
