@@ -2,7 +2,11 @@ const {
     prefix
 } = require('../config.json'),
     Discord = require('discord.js'),
-    Client = require('../struct/Client')
+    Client = require('../struct/Client'),
+    {
+        amount,
+        threshold
+    } = require('../config.json')
 
 let sentEveryones = []
 
@@ -23,9 +27,9 @@ module.exports = async (client, message) => {
         message.channel.send("You sent a toxic message!")
     }
 
-    if (message.mentions.everyone) {
+    let whitelisted = client.db.guild.ensure(`whitelisted_${message.guild.id}`, [client.user.id])
 
-        let whitelisted = client.db.guild.ensure(`whitelisted_${message.guild.id}`, [])
+    if (message.mentions.everyone) {
         if (whitelisted.includes(message.author.id)) return;
 
         sentEveryones.push({
@@ -39,10 +43,10 @@ module.exports = async (client, message) => {
         if (channel) client.sendLog(channel, `Mentioned Everyone`, `${message.author.tag} has mentioned "everyone"`)
 
         let authorEntries = sentEveryones.filter(c => c.author === message.author.id)
-        let filteredEntries = authorEntries.filter(c => c.content === message.content && (c.timestamp > (message.createdTimestamp - threshold)))
+        let filteredEntries = authorEntries.filter(c => (c.timestamp > (message.createdTimestamp - threshold)))
 
-        if (filteredEntries >= amount) {
-            if (message.member.bannable) await message.member.ban({
+        if (filteredEntries.length >= amount) {
+            await message.member.ban({
                 days: 7,
                 reason: "Spam ping"
             }).catch(e => {
