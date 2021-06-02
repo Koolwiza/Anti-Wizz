@@ -13,7 +13,7 @@ module.exports = class AntiToxic {
         let perspectiveURL = 'https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1';
 
         let client = await google.discoverAPI(perspectiveURL).catch(err => {
-            throw err;
+            console.log(err)
         })
 
         let resource = {
@@ -28,9 +28,10 @@ module.exports = class AntiToxic {
             },
         }
 
-        let res = await client.comments.analyze(resource)
+        let res = await client.comments.analyze(resource).catch(c => {})
 
-        let value = res.data.attributeScores.TOXICITY.spanScores[0].score.value
+        let value = res?.data?.attributeScores?.TOXICITY?.spanScores[0]?.score?.value
+        if(!value) return 0
         let percent = Math.round(value * 100)
 
         if (percent >= this.percent) return true
