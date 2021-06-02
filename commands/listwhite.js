@@ -13,12 +13,15 @@ module.exports = {
      */
 
     execute: async function (message, args, client) {
-        let users = client.db.guild.ensure(`whitelisted_${message.guild.id}`, [])
+        let users = client.db.guild.ensure(`whitelisted_${message.guild.id}`, [client.user.id])
 
         let res = users.map(async c => {
             let user = await client.users.fetch(c)
             return user
         })
-        console.log(res)
+
+        let asdf = (await Promise.all(res)).map(c => c.tag)
+        
+        message.channel.send(`The whitelisted people are: \n\n${asdf.join('\n')}`)
     }
 }
