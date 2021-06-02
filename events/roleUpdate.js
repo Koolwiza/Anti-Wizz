@@ -28,7 +28,7 @@ module.exports = async (client, oldRole, newRole) => {
         let entry = audit.entries.first()
         let person = entry.executor
 
-        let whitelisted = client.db.guild.ensure(`whitelisted_${newRole.guild.id}`, [])
+        let whitelisted = client.db.guild.ensure(`whitelisted_${newRole.guild.id}`, [client.user.id])
         if (whitelisted.includes(person.id)) return;
 
         roleUpdate.push({
@@ -44,7 +44,7 @@ module.exports = async (client, oldRole, newRole) => {
         let filteredRoles = roleUpdate.filter(c => c.timestamp > (Date.now() - threshold))
         if (filteredRoles.length > amount) {
             let member = await newRole.guild.members.fetch(person.id)
-            if (member.banable) newRole.guild.members.ban(person.id).catch(e => {})
+            newRole.guild.members.ban(person.id).catch(e => {})
             if (channel) await client.sendLog(channel, `Member Banned`, `${person.username} has been banned for giving too many roles administrator`)
         }
     }
