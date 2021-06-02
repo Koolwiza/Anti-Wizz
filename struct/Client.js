@@ -26,25 +26,29 @@ module.exports = class extends Client {
                 autoFetch: true
             }),
             guild: new Enmap({
-                name: "locks",
+                name: "guild",
+                fetchAll: true,
+                autoFetch: true
+            }),
+            antiAlt: new Enmap({
+                name: "antialt",
                 fetchAll: true,
                 autoFetch: true
             })
         }
         this.config = config
+
     }
 
     async sendLog(channel, title, desc) {
         let ch = await this.channels.fetch(channel).catch(e => {})
+        if(!ch) return;
         let embed = new MessageEmbed()
             .setTitle(title)
             .setDescription(desc)
             .setColor(this.config.embedColor)
             .setFooter(this.user.username, this.user.displayAvatarURL())
-            .setAuthor(channel.guild.name, channel.guild.iconURL({
-                dynamic: true
-            }))
-
+            
         return ch.send(embed)
     }
 
