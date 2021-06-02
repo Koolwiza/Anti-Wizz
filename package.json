@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "enmap": "^5.8.5"
+    "enmap": "^5.8.5",
+    "googleapis": "^73.0.0",
+    "humanize-duration": "^3.26.0",
+    "lodash": "^4.17.21"
   }
 }
