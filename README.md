@@ -2,6 +2,8 @@
 
 A bot made to protect your server against raiders
 
+This bot is in discord.js v12, and most likely won't be updated. I made this 2 years ago but only published it now as back then I thought it was something really cool and kept it to myself...
+
 ## :sparkles: Features
 
 - Anti Webhooks (Deletes webhooks and bans owner of webhook when x amount of webhooks are created in x seconds)
